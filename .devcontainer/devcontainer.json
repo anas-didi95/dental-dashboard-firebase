@@ -6,6 +6,7 @@
   "dockerComposeFile": "../docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/home/node/workspace",
+  "shutdownAction": "stopCompose",
   "containerEnv": {
     "HOME": "/home/node"
   }
