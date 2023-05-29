@@ -7,3 +7,4 @@ services:
     command: sleep infinity
     volumes:
       - ./:/home/node/workspace:z
+      - .vscode-server/:/home/node/.vscode-server:z
