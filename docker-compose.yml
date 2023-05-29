@@ -8,3 +8,4 @@ services:
     volumes:
       - ./:/home/node/workspace:z
       - .vscode-server/:/home/node/.vscode-server:z
+      - .npm/:/home/node/.npm:z
