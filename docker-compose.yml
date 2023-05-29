@@ -9,3 +9,4 @@ services:
       - ./:/home/node/workspace:z
       - .vscode-server/:/home/node/.vscode-server:z
       - .npm/:/home/node/.npm:z
+      - .bash_aliases:/home/node/.bash_aliases:z
