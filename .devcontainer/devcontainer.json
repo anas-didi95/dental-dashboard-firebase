@@ -3,8 +3,9 @@
 {
   "name": "Node.js & TypeScript",
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:0-20",
-  "runArgs": ["--userns=keep-id"],
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/home/node/workspace",
   "containerEnv": {
     "HOME": "/home/node"
   }
