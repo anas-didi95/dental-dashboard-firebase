@@ -1,7 +1,7 @@
 {
   "name": "functions",
   "scripts": {
-    "lint": "prettier --write src/**/*.ts && eslint --ext .js,.ts .",
+    "lint": "prettier --write src/**/*.ts test/**/*.ts && eslint --ext .js,.ts .",
     "lint:config": "eslint-config-prettier src/**/*.ts",
     "build": "tsc",
     "build:watch": "tsc --watch",
