@@ -1,0 +1,6 @@
+GET http://127.0.0.1:5001/dental-dashboard/us-central1/helloWorld
+
+{
+    "name": "sample",
+    "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
