@@ -1,13 +1,13 @@
-import express from "express"
+import express from "express";
 
-const app = express()
+const app = express();
 
 app.get("/", (req, res) => {
-  res.send("Hello Firebase")
-})
+  res.send("Hello Firebase");
+});
 
 app.get("/:name", (req, res) => {
-  res.send(`Hello ${req.params.name}`)
-})
+  res.send(`Hello ${req.params.name}`);
+});
 
-export default app
+export default app;

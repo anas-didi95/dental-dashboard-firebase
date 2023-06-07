@@ -1,6 +1,6 @@
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import express from "express"
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import express from "express";
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -24,12 +24,12 @@ const typeDefs = `#graphql
 
 const books = [
   {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
+    title: "The Awakening",
+    author: "Kate Chopin",
   },
   {
-    title: 'City of Glass',
-    author: 'Paul Auster',
+    title: "City of Glass",
+    author: "Paul Auster",
   },
 ];
 
@@ -48,6 +48,6 @@ const server = new ApolloServer({
   resolvers,
 });
 
-const app = express()
-server.start().then(() => app.use("/", expressMiddleware(server)))
-export default app
+const app = express();
+server.start().then(() => app.use("/", expressMiddleware(server)));
+export default app;
