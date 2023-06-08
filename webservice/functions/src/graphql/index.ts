@@ -1,9 +1,9 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
-import { express } from "../utils/helper"
-import firebase from "firebase-admin"
+import { express } from "../utils/helper";
+import firebase from "firebase-admin";
 
-firebase.initializeApp()
+firebase.initializeApp();
 export default () => {
   // A schema is a collection of type definitions (hence "typeDefs")
   // that together define the "shape" of queries that are executed against
@@ -47,9 +47,12 @@ export default () => {
     Query: {
       books: async () => books,
       patients: async () => {
-        const resultList = await firebase.firestore().collection("patients").get()
-        return resultList.docs.map(o => o.data())
-      }
+        const resultList = await firebase
+          .firestore()
+          .collection("patients")
+          .get();
+        return resultList.docs.map((o) => o.data());
+      },
     },
   };
 
@@ -62,5 +65,5 @@ export default () => {
 
   const app = express();
   server.start().then(() => app.use("/", expressMiddleware(server)));
-  return app
-}
+  return app;
+};

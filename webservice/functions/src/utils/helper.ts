@@ -1,7 +1,7 @@
-import expressModule from "express"
+import expressModule from "express";
 
 export const express = () => {
-  const app = expressModule()
+  const app = expressModule();
 
   return app;
-}
+};

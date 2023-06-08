@@ -1,4 +1,4 @@
-import { express } from "../utils/helper"
+import { express } from "../utils/helper";
 
 export default () => {
   const app = express();
@@ -12,4 +12,4 @@ export default () => {
   });
 
   return app;
-}
+};
