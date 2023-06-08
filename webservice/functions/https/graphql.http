@@ -1,0 +1,8 @@
+@baseURL=http://127.0.0.1:5001/dental-dashboard/us-central1/graphql
+
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+  "query": "query ExampleQuery { books { title } patients { name } }"
+}
