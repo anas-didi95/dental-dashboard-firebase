@@ -1,7 +1,9 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { express } from "../utils/helper"
+import firebase from "firebase-admin"
 
+firebase.initializeApp()
 export default () => {
   // A schema is a collection of type definitions (hence "typeDefs")
   // that together define the "shape" of queries that are executed against
@@ -15,11 +17,16 @@ export default () => {
     author: String
   }
 
+  type Patient {
+    name: String!
+  }
+
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
     books: [Book]
+    patients: [Patient]!
   }
 `;
 
@@ -38,7 +45,11 @@ export default () => {
   // This resolver retrieves books from the "books" array above.
   const resolvers = {
     Query: {
-      books: () => books,
+      books: async () => books,
+      patients: async () => {
+        const resultList = await firebase.firestore().collection("patients").get()
+        return resultList.docs.map(o => o.data())
+      }
     },
   };
 
