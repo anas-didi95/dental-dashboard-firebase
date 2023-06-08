@@ -1,13 +1,15 @@
-import express from "express";
+import { express } from "../utils/helper"
 
-const app = express();
+export default () => {
+  const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello Firebase");
-});
+  app.get("/", (req, res) => {
+    res.send("Hello Firebase");
+  });
 
-app.get("/:name", (req, res) => {
-  res.send(`Hello ${req.params.name}`);
-});
+  app.get("/:name", (req, res) => {
+    res.send(`Hello ${req.params.name}`);
+  });
 
-export default app;
+  return app;
+}
