@@ -1,3 +1,3 @@
 export type TAppointment = {
-  patientId: string
-}
+  patientId: string;
+};

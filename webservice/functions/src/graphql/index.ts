@@ -3,7 +3,7 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { express } from "../utils/helper";
 import firebase from "firebase-admin";
 import { TAppointment } from "../utils/types";
-import { GraphQLScalarType, Kind } from 'graphql';
+import { GraphQLScalarType, Kind } from "graphql";
 
 firebase.initializeApp();
 export default () => {
@@ -40,23 +40,22 @@ export default () => {
   scalar Date
 `;
 
-
   const dateScalar = new GraphQLScalarType({
-    name: 'Date',
-    description: 'Date custom scalar type',
+    name: "Date",
+    description: "Date custom scalar type",
     serialize(value) {
       if (value instanceof Date) {
         return value.getTime(); // Convert outgoing Date to integer for JSON
       } else if (value instanceof firebase.firestore.Timestamp) {
-        return value.toDate().getTime()
+        return value.toDate().getTime();
       }
-      throw Error('GraphQL Date Scalar serializer expected a `Date` object');
+      throw Error("GraphQL Date Scalar serializer expected a `Date` object");
     },
     parseValue(value) {
-      if (typeof value === 'number') {
+      if (typeof value === "number") {
         return new Date(value); // Convert incoming integer to Date
       }
-      throw new Error('GraphQL Date Scalar parser expected a `number`');
+      throw new Error("GraphQL Date Scalar parser expected a `number`");
     },
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {
@@ -93,16 +92,23 @@ export default () => {
         return resultList.docs.map((o) => o.data());
       },
       appointments: async () => {
-        const resultList = await firebase.firestore().collection("appointments").get()
-        return resultList.docs.map(o => o.data())
-      }
+        const resultList = await firebase
+          .firestore()
+          .collection("appointments")
+          .get();
+        return resultList.docs.map((o) => o.data());
+      },
     },
     Appointment: {
       patient: async (parent: TAppointment) => {
-        const result = await firebase.firestore().collection("patients").doc(parent.patientId).get()
-        return result.data()
-      }
-    }
+        const result = await firebase
+          .firestore()
+          .collection("patients")
+          .doc(parent.patientId)
+          .get();
+        return result.data();
+      },
+    },
   };
 
   // The ApolloServer constructor requires two parameters: your schema
