@@ -3,6 +3,7 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { express } from "../utils/helper";
 import firebase from "firebase-admin";
 import { TAppointment } from "../utils/types";
+import { GraphQLScalarType, Kind } from 'graphql';
 
 firebase.initializeApp();
 export default () => {
@@ -24,6 +25,7 @@ export default () => {
 
   type Appointment {
     patient: Patient!
+    date: Date!
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -34,7 +36,37 @@ export default () => {
     patients: [Patient]!
     appointments: [Appointment]!
   }
+
+  scalar Date
 `;
+
+
+  const dateScalar = new GraphQLScalarType({
+    name: 'Date',
+    description: 'Date custom scalar type',
+    serialize(value) {
+      if (value instanceof Date) {
+        return value.getTime(); // Convert outgoing Date to integer for JSON
+      } else if (value instanceof firebase.firestore.Timestamp) {
+        return value.toDate().getTime()
+      }
+      throw Error('GraphQL Date Scalar serializer expected a `Date` object');
+    },
+    parseValue(value) {
+      if (typeof value === 'number') {
+        return new Date(value); // Convert incoming integer to Date
+      }
+      throw new Error('GraphQL Date Scalar parser expected a `number`');
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT) {
+        // Convert hard-coded AST string to integer and then to Date
+        return new Date(parseInt(ast.value, 10));
+      }
+      // Invalid hard-coded value (not an integer)
+      return null;
+    },
+  });
 
   const books = [
     {
@@ -50,6 +82,7 @@ export default () => {
   // Resolvers define how to fetch the types defined in your schema.
   // This resolver retrieves books from the "books" array above.
   const resolvers = {
+    Date: dateScalar,
     Query: {
       books: async () => books,
       patients: async () => {
