@@ -2,6 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { express } from "../utils/helper";
 import firebase from "firebase-admin";
+import { TAppointment } from "../utils/types";
 
 firebase.initializeApp();
 export default () => {
@@ -64,7 +65,7 @@ export default () => {
       }
     },
     Appointment: {
-      patient: async (parent: { patientId: string; }) => {
+      patient: async (parent: TAppointment) => {
         const result = await firebase.firestore().collection("patients").doc(parent.patientId).get()
         return result.data()
       }
