@@ -21,12 +21,17 @@ export default () => {
     name: String!
   }
 
+  type Appointment {
+    patient: Patient!
+  }
+
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
     books: [Book]
     patients: [Patient]!
+    appointments: [Appointment]!
   }
 `;
 
@@ -53,7 +58,17 @@ export default () => {
           .get();
         return resultList.docs.map((o) => o.data());
       },
+      appointments: async () => {
+        const resultList = await firebase.firestore().collection("appointments").get()
+        return resultList.docs.map(o => o.data())
+      }
     },
+    Appointment: {
+      patient: async (parent: { patientId: string; }) => {
+        const result = await firebase.firestore().collection("patients").doc(parent.patientId).get()
+        return result.data()
+      }
+    }
   };
 
   // The ApolloServer constructor requires two parameters: your schema
