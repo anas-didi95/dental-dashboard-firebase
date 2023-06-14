@@ -4,6 +4,7 @@ import { express } from "../utils/helper";
 import firebase from "firebase-admin";
 import { TAppointment } from "../utils/types";
 import { GraphQLScalarType, Kind } from "graphql";
+import DataLoader from "dataloader"
 
 firebase.initializeApp();
 export default () => {
@@ -100,16 +101,19 @@ export default () => {
       },
     },
     Appointment: {
-      patient: async (parent: TAppointment) => {
-        const result = await firebase
-          .firestore()
-          .collection("patients")
-          .doc(parent.patientId)
-          .get();
-        return result.data();
+      patient: async (parent: TAppointment, _: any, context: any) => {
+        console.log("[patient] get dataloder")
+        return context.patientDataLoader.load(parent.patientId)
       },
     },
   };
+
+  const patientDataLoader = new DataLoader(async (keys) => {
+    console.log("[dataloader] keys", keys)
+    return await Promise.all(keys.map(async (key) => {
+      return (await firebase.firestore().collection("patients").doc(key as string).get()).data()
+    }))
+  })
 
   // The ApolloServer constructor requires two parameters: your schema
   // definition and your set of resolvers.
@@ -119,6 +123,12 @@ export default () => {
   });
 
   const app = express();
-  server.start().then(() => app.use("/", expressMiddleware(server)));
+  server.start().then(() => app.use("/", expressMiddleware(server, {
+    context: async () => {
+      return {
+        patientDataLoader
+      }
+    }
+  })));
   return app;
 };
