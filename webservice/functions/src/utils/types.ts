@@ -1,4 +1,4 @@
-import DataLoader from "dataloader"
+import DataLoader from "dataloader";
 import firebase from "firebase-admin";
 
 export type TAppointment = {
@@ -6,5 +6,9 @@ export type TAppointment = {
 };
 
 export type TGQLContext = {
-  patientLoader: DataLoader<string, Promise<firebase.firestore.DocumentData | null | undefined>, string>
-}
+  patientLoader: DataLoader<
+    string,
+    Promise<firebase.firestore.DocumentData | null | undefined>,
+    string
+  >;
+};
