@@ -2,7 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { express } from "../utils/helper";
 import firebase from "firebase-admin";
-import { TAppointment } from "../utils/types";
+import { TAppointment, TGQLContext } from "../utils/types";
 import { GraphQLScalarType, Kind } from "graphql";
 import DataLoader from "dataloader"
 
@@ -101,19 +101,21 @@ export default () => {
       },
     },
     Appointment: {
-      patient: async (parent: TAppointment, _: any, context: any) => {
-        console.log("[patient] get dataloder")
-        return context.patientDataLoader.load(parent.patientId)
+      patient: async (parent: TAppointment, _: unknown, context: TGQLContext) => {
+        return context.patientLoader.load(parent.patientId)
       },
     },
   };
 
-  const patientDataLoader = new DataLoader(async (keys) => {
-    console.log("[dataloader] keys", keys)
-    return await Promise.all(keys.map(async (key) => {
-      return (await firebase.firestore().collection("patients").doc(key as string).get()).data()
-    }))
-  })
+  const context: TGQLContext = {
+    patientLoader: new DataLoader(async keys => {
+      return keys.map(async key => {
+        const result = await firebase.firestore().collection("patients").doc(key as string).get()
+        if (!result.exists) return null
+        return result.data()
+      })
+    })
+  }
 
   // The ApolloServer constructor requires two parameters: your schema
   // definition and your set of resolvers.
@@ -124,11 +126,7 @@ export default () => {
 
   const app = express();
   server.start().then(() => app.use("/", expressMiddleware(server, {
-    context: async () => {
-      return {
-        patientDataLoader
-      }
-    }
+    context: async () => context
   })));
   return app;
 };
