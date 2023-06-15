@@ -4,17 +4,13 @@ import { express } from "../utils/helper";
 import { Firestore } from "firebase-admin/firestore";
 import { TGQLContext } from "../utils/types";
 import DataLoader from "dataloader";
-import { typeDefs, resolvers } from "./scheme"
+import { typeDefs, resolvers } from "./scheme";
 
 export default (firestore: Firestore) => {
   const context: TGQLContext = {
     patientLoader: new DataLoader(async (keys) => {
       return keys.map(async (key) => {
-        const result = await
-          firestore
-            .collection("patients")
-            .doc(key)
-            .get();
+        const result = await firestore.collection("patients").doc(key).get();
         if (!result.exists) return null;
         return result.data();
       });
@@ -25,7 +21,7 @@ export default (firestore: Firestore) => {
   // definition and your set of resolvers.
   const server = new ApolloServer({
     typeDefs,
-    resolvers: resolvers(firestore)
+    resolvers: resolvers(firestore),
   });
 
   const app = express();

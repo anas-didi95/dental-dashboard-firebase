@@ -1,6 +1,6 @@
 import { Firestore, Timestamp } from "firebase-admin/firestore";
-import { GraphQLScalarType, Kind } from "graphql"
-import { TAppointment, TGQLContext } from "../utils/types"
+import { GraphQLScalarType, Kind } from "graphql";
+import { TAppointment, TGQLContext } from "../utils/types";
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -20,8 +20,7 @@ const typeDefs = `#graphql
   }
 
   # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  # clients can execute, along with the return type for each.
   type Query {
     patients: [Patient]!
     appointments: [Appointment]!
@@ -58,30 +57,19 @@ const resolvers = (firestore: Firestore) => ({
   }),
   Query: {
     patients: async () => {
-      const resultList = await
-        firestore
-          .collection("patients")
-          .get();
+      const resultList = await firestore.collection("patients").get();
       return resultList.docs.map((o) => o.data());
     },
     appointments: async () => {
-      const resultList = await
-        firestore
-          .collection("appointments")
-          .get();
+      const resultList = await firestore.collection("appointments").get();
       return resultList.docs.map((o) => o.data());
     },
   },
   Appointment: {
-    patient: async (
-      parent: TAppointment,
-      _: unknown,
-      context: TGQLContext
-    ) => {
+    patient: async (parent: TAppointment, _: unknown, context: TGQLContext) => {
       return context.patientLoader.load(parent.patientId);
     },
   },
-}
-);
+});
 
-export { typeDefs, resolvers }
+export { typeDefs, resolvers };
