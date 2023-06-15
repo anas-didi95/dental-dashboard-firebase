@@ -1,13 +1,12 @@
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { express } from "../utils/helper";
-import firebase from "firebase-admin";
+import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { TAppointment, TGQLContext } from "../utils/types";
 import { GraphQLScalarType, Kind } from "graphql";
 import DataLoader from "dataloader";
 
-firebase.initializeApp();
-export default () => {
+export default (firestore: Firestore) => {
   // A schema is a collection of type definitions (hence "typeDefs")
   // that together define the "shape" of queries that are executed against
   // your data.
@@ -47,7 +46,7 @@ export default () => {
     serialize(value) {
       if (value instanceof Date) {
         return value.getTime(); // Convert outgoing Date to integer for JSON
-      } else if (value instanceof firebase.firestore.Timestamp) {
+      } else if (value instanceof Timestamp) {
         return value.toDate().getTime();
       }
       throw Error("GraphQL Date Scalar serializer expected a `Date` object");
@@ -86,17 +85,17 @@ export default () => {
     Query: {
       books: async () => books,
       patients: async () => {
-        const resultList = await firebase
-          .firestore()
-          .collection("patients")
-          .get();
+        const resultList = await
+          firestore
+            .collection("patients")
+            .get();
         return resultList.docs.map((o) => o.data());
       },
       appointments: async () => {
-        const resultList = await firebase
-          .firestore()
-          .collection("appointments")
-          .get();
+        const resultList = await
+          firestore
+            .collection("appointments")
+            .get();
         return resultList.docs.map((o) => o.data());
       },
     },
@@ -114,11 +113,11 @@ export default () => {
   const context: TGQLContext = {
     patientLoader: new DataLoader(async (keys) => {
       return keys.map(async (key) => {
-        const result = await firebase
-          .firestore()
-          .collection("patients")
-          .doc(key)
-          .get();
+        const result = await
+          firestore
+            .collection("patients")
+            .doc(key)
+            .get();
         if (!result.exists) return null;
         return result.data();
       });
