@@ -62,7 +62,9 @@ const resolvers = (firestore: Firestore) => ({
       return resultList.docs.map((o) => o.data());
     },
     appointments: async () => {
-      const resultList = await firestore.collection(Collection.Appointment).get();
+      const resultList = await firestore
+        .collection(Collection.Appointment)
+        .get();
       return resultList.docs.map((o) => o.data());
     },
   },
