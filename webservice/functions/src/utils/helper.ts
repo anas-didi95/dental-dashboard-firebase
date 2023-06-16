@@ -1,5 +1,5 @@
 import expressModule from "express";
-import { Firestore } from "firebase-admin/firestore"
+import { Firestore } from "firebase-admin/firestore";
 import { Collection } from "./constants";
 
 export const express = () => {
@@ -8,4 +8,5 @@ export const express = () => {
   return app;
 };
 
-export const getServerHealth = (firestore: Firestore) => firestore.collection(Collection.Server).doc("health")
+export const getServerHealth = (firestore: Firestore) =>
+  firestore.collection(Collection.Server).doc("health");

@@ -65,8 +65,8 @@ const resolvers = (firestore: Firestore) => ({
   }),
   Query: {
     serverHealth: async () => {
-      const result = await getServerHealth(firestore).get()
-      return result.data()
+      const result = await getServerHealth(firestore).get();
+      return result.data();
     },
     patients: async () => {
       const resultList = await firestore.collection(Collection.Patient).get();

@@ -1,5 +1,5 @@
 import DataLoader from "dataloader";
-import { DocumentData, Timestamp } from "firebase-admin/firestore"
+import { DocumentData, Timestamp } from "firebase-admin/firestore";
 
 export type TAppointment = {
   patientId: string;
@@ -14,6 +14,6 @@ export type TGQLContext = {
 };
 
 export type TServerHealth = {
-  deployDate: Timestamp,
-  isOnline: boolean
-}
+  deployDate: Timestamp;
+  isOnline: boolean;
+};
