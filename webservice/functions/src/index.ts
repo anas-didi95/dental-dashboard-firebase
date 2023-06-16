@@ -10,11 +10,12 @@ import graphQLHandler from "./graphql"
 export const graphql = functions.https.onRequest(graphQLHandler(firebaseApp.firestore()))
 
 import { TServerHealth } from "./utils/types"
+import { getServerHealth } from "./utils/helper"
 const healthData: TServerHealth = {
   deployDate: firebase.firestore.Timestamp.now(),
   isOnline: true
 }
-const doc = firebaseApp.firestore().collection("server").doc("health")
+const doc = getServerHealth(firebaseApp.firestore())
 doc.get().then(record => {
   if (record.exists) return doc.update(healthData)
   return doc.create(healthData)
