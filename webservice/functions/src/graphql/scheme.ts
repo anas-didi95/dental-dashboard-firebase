@@ -11,6 +11,11 @@ const typeDefs = `#graphql
 
   scalar Date
 
+  type ServerHealth {
+    deployDate: Date!
+    isOnline: Boolean!
+  }
+
   type Patient {
     name: String!
   }
@@ -23,6 +28,7 @@ const typeDefs = `#graphql
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each.
   type Query {
+    serverHealth: ServerHealth
     patients: [Patient]!
     appointments: [Appointment]!
   }
@@ -57,6 +63,10 @@ const resolvers = (firestore: Firestore) => ({
     },
   }),
   Query: {
+    serverHealth: async () => {
+      const result = await firestore.collection("server").doc("health").get()
+      return result.data()
+    },
     patients: async () => {
       const resultList = await firestore.collection(Collection.Patient).get();
       return resultList.docs.map((o) => o.data());

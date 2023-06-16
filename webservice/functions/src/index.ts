@@ -9,7 +9,8 @@ export const helloWorld = functions.https.onRequest(helloWorldHandler())
 import graphQLHandler from "./graphql"
 export const graphql = functions.https.onRequest(graphQLHandler(firebaseApp.firestore()))
 
-const healthData = {
+import { TServerHealth } from "./utils/types"
+const healthData: TServerHealth = {
   deployDate: firebase.firestore.Timestamp.now(),
   isOnline: true
 }
