@@ -1,6 +1,7 @@
 import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { GraphQLScalarType, Kind } from "graphql";
 import { TAppointment, TGQLContext } from "../utils/types";
+import { Collection } from "../utils/constants";
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -57,11 +58,11 @@ const resolvers = (firestore: Firestore) => ({
   }),
   Query: {
     patients: async () => {
-      const resultList = await firestore.collection("patients").get();
+      const resultList = await firestore.collection(Collection.Patient).get();
       return resultList.docs.map((o) => o.data());
     },
     appointments: async () => {
-      const resultList = await firestore.collection("appointments").get();
+      const resultList = await firestore.collection(Collection.Appointment).get();
       return resultList.docs.map((o) => o.data());
     },
   },
