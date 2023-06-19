@@ -12,13 +12,22 @@ const typeDefs = `#graphql
 
   scalar Date
 
+  interface Record {
+    version: Int!
+    lastModifiedDate: Date!
+    lastModifiedBy: String!
+  }
+
   type ServerHealth {
     deployDate: Date!
     isOnline: Boolean!
   }
 
-  type Patient {
+  type Patient implements Record {
     name: String!
+    version: Int!
+    lastModifiedDate: Date!
+    lastModifiedBy: String!
   }
 
   type Appointment {
