@@ -2,14 +2,14 @@ import DataLoader from "dataloader";
 import { DocumentData, Timestamp } from "firebase-admin/firestore";
 
 type TRecord = {
-  version: number
-  lastModifiedDate: Timestamp
-  lastModifiedBy: string
-}
+  version: number;
+  lastModifiedDate: Timestamp;
+  lastModifiedBy: string;
+};
 
 export type TPatient = {
-  name: string
-} & TRecord
+  name: string;
+} & TRecord;
 
 export type TAppointment = {
   patientId: string;
