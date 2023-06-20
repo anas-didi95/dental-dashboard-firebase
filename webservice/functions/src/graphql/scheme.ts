@@ -24,7 +24,7 @@ const typeDefs = `#graphql
   }
 
   type Patient implements Record {
-    name: String!
+    fullName: String!
     version: Int!
     lastModifiedDate: Date!
     lastModifiedBy: String!

@@ -8,7 +8,7 @@ type TRecord = {
 };
 
 export type TPatient = {
-  name: string;
+  fullName: string;
 } & TRecord;
 
 export type TAppointment = {
