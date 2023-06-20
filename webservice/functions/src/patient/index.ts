@@ -13,6 +13,11 @@ export default (firestore: Firestore) => {
       lastModifiedDate: Timestamp.now(),
       lastModifiedBy: "SYSTEM",
     };
+    const errorList = validate(body)
+    if (errorList.length > 0) {
+      res.status(400).send(errorList)
+    }
+
     const doc = await (
       await firestore.collection(Collection.Patient).add(body)
     ).get();
@@ -21,3 +26,21 @@ export default (firestore: Firestore) => {
 
   return app;
 };
+
+const validate = (data: TPatient) => {
+  const prop = {
+    name: {
+      mandatory: true
+    }
+  }
+
+  return Object.keys(prop).map(key => {
+    const err = []
+    const rule = (prop)[key as keyof typeof prop]
+    if (rule.mandatory) {
+      const error = !data[key as keyof TPatient] ? `${key} is mandatory field!` : ''
+      err.push(error)
+    }
+    return err.filter(a => !!a);
+  }).reduce((prev, curr) => prev.concat(curr))
+}
