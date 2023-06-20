@@ -5,5 +5,5 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "name1": "John Doe"
+  "name2": "John Doe"
 }

@@ -27,3 +27,7 @@ export type TServerHealth = {
   deployDate: Timestamp;
   isOnline: boolean;
 };
+
+export type TRule = {
+  mandatory?: boolean
+}

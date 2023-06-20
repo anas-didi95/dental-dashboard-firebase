@@ -1,7 +1,7 @@
 import { Firestore, Timestamp } from "firebase-admin/firestore";
-import { express } from "../utils/helper";
+import { express, validator } from "../utils/helper";
 import { Collection, ErrorCode } from "../utils/constants";
-import { TPatient } from "../utils/types";
+import { TPatient, TRule } from "../utils/types";
 
 export default (firestore: Firestore) => {
   const app = express();
@@ -28,19 +28,10 @@ export default (firestore: Firestore) => {
 };
 
 const validate = (data: TPatient) => {
-  const prop = {
+  const prop: { [key: string]: TRule } = {
     name: {
       mandatory: true
     }
   }
-
-  return Object.keys(prop).map(key => {
-    const err = []
-    const rule = (prop)[key as keyof typeof prop]
-    if (rule.mandatory) {
-      const error = !data[key as keyof TPatient] ? `${key} is mandatory field!` : ''
-      err.push(error)
-    }
-    return err.filter(a => !!a);
-  }).reduce((prev, curr) => prev.concat(curr))
+  return validator(data, prop)
 }
