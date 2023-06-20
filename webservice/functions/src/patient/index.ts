@@ -1,6 +1,6 @@
 import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { express } from "../utils/helper";
-import { Collection } from "../utils/constants";
+import { Collection, ErrorCode } from "../utils/constants";
 import { TPatient } from "../utils/types";
 
 export default (firestore: Firestore) => {
@@ -15,7 +15,7 @@ export default (firestore: Firestore) => {
     };
     const errorList = validate(body)
     if (errorList.length > 0) {
-      res.status(400).send(errorList)
+      res.status(400).send({ ...ErrorCode.ValidateError, errorList })
     }
 
     const doc = await (
