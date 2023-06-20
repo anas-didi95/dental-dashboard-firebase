@@ -13,9 +13,9 @@ export default (firestore: Firestore) => {
       lastModifiedDate: Timestamp.now(),
       lastModifiedBy: "SYSTEM",
     };
-    const errorList = validate(body)
+    const errorList = validate(body);
     if (errorList.length > 0) {
-      res.status(400).send({ ...ErrorCode.ValidateError, errorList })
+      res.status(400).send({ ...ErrorCode.ValidateError, errorList });
     }
 
     const doc = await (
@@ -30,8 +30,8 @@ export default (firestore: Firestore) => {
 const validate = (data: TPatient) => {
   const prop: { [key: string]: TRule } = {
     fullName: {
-      mandatory: true
-    }
-  }
-  return validator(data, prop)
-}
+      mandatory: true,
+    },
+  };
+  return validator(data, prop);
+};

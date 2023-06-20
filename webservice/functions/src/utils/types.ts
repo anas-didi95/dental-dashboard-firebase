@@ -29,5 +29,5 @@ export type TServerHealth = {
 };
 
 export type TRule = {
-  mandatory?: boolean
-}
+  mandatory?: boolean;
+};

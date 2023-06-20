@@ -7,6 +7,6 @@ export const Collection = {
 export const ErrorCode = {
   ValidateError: {
     code: "E001",
-    message: "Validation Error!"
-  }
-}
+    message: "Validation Error!",
+  },
+};
