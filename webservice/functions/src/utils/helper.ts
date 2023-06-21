@@ -13,22 +13,27 @@ export const getServerHealth = (firestore: Firestore) =>
   firestore.collection(Collection.Server).doc("health");
 
 export const validator = (data: TPatient, res: Response, prop: TRule) => {
-  prop = { ...prop, version: { type: "number", mandatory: true }, lastModifiedBy: { type: "string", mandatory: true }, lastModifiedDate: { type: "date", mandatory: true } }
+  prop = {
+    ...prop,
+    version: { type: "number", mandatory: true },
+    lastModifiedBy: { type: "string", mandatory: true },
+    lastModifiedDate: { type: "date", mandatory: true },
+  };
   const errorList = Object.keys(prop)
     .map((key) => {
       const err = [];
       const rule = prop[key as keyof typeof prop];
-      const type = rule["type"]
-      const value = data[key as keyof typeof data]
+      const type = rule["type"];
+      const value = data[key as keyof typeof data];
       if (rule.mandatory) {
-        let isError = false
+        let isError = false;
         if (type === "number") {
-          isError = isNaN(value as number)
+          isError = isNaN(value as number);
         } else {
-          isError = !value
+          isError = !value;
         }
         if (isError) {
-          err.push(`[${key}] is mandatory field!`)
+          err.push(`[${key}] is mandatory field!`);
         }
       }
       return err.filter((a) => !!a);
@@ -36,6 +41,6 @@ export const validator = (data: TPatient, res: Response, prop: TRule) => {
     .reduce((prev, curr) => prev.concat(curr));
 
   if (errorList.length > 0) {
-    res.status(400).send({ ...ErrorCode.ValidateError, errorList })
+    res.status(400).send({ ...ErrorCode.ValidateError, errorList });
   }
 };

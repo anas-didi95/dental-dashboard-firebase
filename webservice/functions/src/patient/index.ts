@@ -2,7 +2,7 @@ import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { express, validator } from "../utils/helper";
 import { Collection } from "../utils/constants";
 import { TPatient, TRule } from "../utils/types";
-import { Response } from "express"
+import { Response } from "express";
 
 export default (firestore: Firestore) => {
   const app = express();
