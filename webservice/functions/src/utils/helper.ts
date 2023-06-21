@@ -1,6 +1,6 @@
-import expressModule from "express";
+import expressModule, { Response } from "express";
 import { Firestore } from "firebase-admin/firestore";
-import { Collection } from "./constants";
+import { Collection, ErrorCode } from "./constants";
 import { TPatient, TRule } from "./types";
 
 export const express = () => {
@@ -12,8 +12,8 @@ export const express = () => {
 export const getServerHealth = (firestore: Firestore) =>
   firestore.collection(Collection.Server).doc("health");
 
-export const validator = (data: TPatient, prop: { [key: string]: TRule }) => {
-  return Object.keys(prop)
+export const validator = (data: TPatient, res: Response, prop: { [key: string]: TRule }) => {
+  const errorList = Object.keys(prop)
     .map((key) => {
       const err = [];
       const rule = prop[key as keyof typeof prop];
@@ -25,4 +25,8 @@ export const validator = (data: TPatient, prop: { [key: string]: TRule }) => {
       return err.filter((a) => !!a);
     })
     .reduce((prev, curr) => prev.concat(curr));
+
+  if (errorList.length > 0) {
+    res.status(400).send({ ...ErrorCode.ValidateError, errorList })
+  }
 };

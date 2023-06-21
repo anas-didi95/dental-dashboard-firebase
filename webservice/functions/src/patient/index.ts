@@ -1,7 +1,8 @@
 import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { express, validator } from "../utils/helper";
-import { Collection, ErrorCode } from "../utils/constants";
+import { Collection } from "../utils/constants";
 import { TPatient, TRule } from "../utils/types";
+import { Response } from "express"
 
 export default (firestore: Firestore) => {
   const app = express();
@@ -13,10 +14,7 @@ export default (firestore: Firestore) => {
       lastModifiedDate: Timestamp.now(),
       lastModifiedBy: "SYSTEM",
     };
-    const errorList = validate(body);
-    if (errorList.length > 0) {
-      res.status(400).send({ ...ErrorCode.ValidateError, errorList });
-    }
+    validate(body, res);
 
     const doc = await (
       await firestore.collection(Collection.Patient).add(body)
@@ -27,11 +25,11 @@ export default (firestore: Firestore) => {
   return app;
 };
 
-const validate = (data: TPatient) => {
+const validate = (data: TPatient, res: Response) => {
   const prop: { [key: string]: TRule } = {
     fullName: {
       mandatory: true,
     },
   };
-  return validator(data, prop);
+  return validator(data, res, prop);
 };
