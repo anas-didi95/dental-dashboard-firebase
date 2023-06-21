@@ -4,13 +4,13 @@ import firebase from "firebase-admin"
 const firebaseApp = firebase.initializeApp()
 
 import helloWorldHandler from "./hello-world"
-export const helloWorld = functions.https.onRequest(helloWorldHandler())
-
 import graphQLHandler from "./graphql"
-export const graphql = functions.https.onRequest(graphQLHandler(firebaseApp.firestore()))
-
 import patientHandler from "./patient"
-export const patients = functions.https.onRequest(patientHandler(firebase.firestore()))
+export const v1 = {
+  helloWorld: functions.https.onRequest(helloWorldHandler()),
+  graphql: functions.https.onRequest(graphQLHandler(firebaseApp.firestore())),
+  patients: functions.https.onRequest(patientHandler(firebase.firestore()))
+}
 
 import { TServerHealth } from "./utils/types"
 import { getServerHealth } from "./utils/helper"
