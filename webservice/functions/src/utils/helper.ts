@@ -12,15 +12,24 @@ export const express = () => {
 export const getServerHealth = (firestore: Firestore) =>
   firestore.collection(Collection.Server).doc("health");
 
-export const validator = (data: TPatient, res: Response, prop: { [key: string]: TRule }) => {
+export const validator = (data: TPatient, res: Response, prop: TRule) => {
+  prop = { ...prop, version: { type: "number", mandatory: true }, lastModifiedBy: { type: "string", mandatory: true }, lastModifiedDate: { type: "date", mandatory: true } }
   const errorList = Object.keys(prop)
     .map((key) => {
       const err = [];
       const rule = prop[key as keyof typeof prop];
+      const type = rule["type"]
+      const value = data[key as keyof typeof data]
       if (rule.mandatory) {
-        err.push(
-          !data[key as keyof typeof data] ? `[${key}] is mandatory field!` : ""
-        );
+        let isError = false
+        if (type === "number") {
+          isError = isNaN(value as number)
+        } else {
+          isError = !value
+        }
+        if (isError) {
+          err.push(`[${key}] is mandatory field!`)
+        }
       }
       return err.filter((a) => !!a);
     })

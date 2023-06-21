@@ -26,8 +26,9 @@ export default (firestore: Firestore) => {
 };
 
 const validate = (data: TPatient, res: Response) => {
-  const prop: { [key: string]: TRule } = {
+  const prop: TRule = {
     fullName: {
+      type: "string",
       mandatory: true,
     },
   };
