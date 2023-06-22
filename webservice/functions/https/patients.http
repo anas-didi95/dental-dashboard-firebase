@@ -3,7 +3,21 @@
 POST {{baseURL}}
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.idToken}}
 
 {
   "fullName": "John Doe"
+}
+
+###
+
+# @name login
+POST http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "test@email.com",
+  "password": "password",
+  "returnSecureToken": true
 }
