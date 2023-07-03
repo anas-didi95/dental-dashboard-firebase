@@ -2,12 +2,12 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { express } from "../utils/helper";
 import { Firestore } from "firebase-admin/firestore";
-import { TGQLContext } from "../utils/types";
+import { TGQLContext, TParamEnv } from "../utils/types";
 import DataLoader from "dataloader";
 import { typeDefs, resolvers } from "./scheme";
 import { Collection } from "../utils/constants";
 
-export default (firestore: Firestore, param: { isDevEnv: boolean }) => {
+export default (firestore: Firestore, paramEnv: TParamEnv) => {
   const context: TGQLContext = {
     patientLoader: new DataLoader(async (keys) => {
       return keys.map(async (key) => {
@@ -25,10 +25,10 @@ export default (firestore: Firestore, param: { isDevEnv: boolean }) => {
   // definition and your set of resolvers.
   const server = new ApolloServer({
     typeDefs,
-    resolvers: resolvers(firestore),
+    resolvers: resolvers(firestore, paramEnv),
   });
 
-  const app = express(param.isDevEnv);
+  const app = express(paramEnv.isDevEnv);
   server.start().then(() =>
     app.use(
       "/",

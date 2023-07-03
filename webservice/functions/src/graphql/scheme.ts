@@ -1,6 +1,6 @@
 import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { GraphQLScalarType, Kind } from "graphql";
-import { TAppointment, TGQLContext } from "../utils/types";
+import { TAppointment, TGQLContext, TParamEnv } from "../utils/types";
 import { Collection } from "../utils/constants";
 import { getServerHealth } from "../utils/helper";
 
@@ -21,6 +21,8 @@ const typeDefs = `#graphql
   type ServerHealth {
     deployDate: Date!
     isOnline: Boolean!
+    appEnv: String!
+    isDevEnv: Boolean!
   }
 
   type Patient implements Record {
@@ -45,7 +47,7 @@ const typeDefs = `#graphql
 `;
 
 // Resolvers define how to fetch the types defined in your schema.
-const resolvers = (firestore: Firestore) => ({
+const resolvers = (firestore: Firestore, paramEnv: TParamEnv) => ({
   Date: new GraphQLScalarType({
     name: "Date",
     description: "Date custom scalar type",
@@ -75,7 +77,7 @@ const resolvers = (firestore: Firestore) => ({
   Query: {
     serverHealth: async () => {
       const result = await getServerHealth(firestore).get();
-      return result.data();
+      return { ...result.data(), ...paramEnv };
     },
     patients: async () => {
       const resultList = await firestore.collection(Collection.Patient).get();

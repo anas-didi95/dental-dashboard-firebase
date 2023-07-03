@@ -34,3 +34,8 @@ export type TRule = {
     mandatory?: boolean;
   };
 };
+
+export type TParamEnv = {
+  appEnv: string
+  isDevEnv: boolean
+}
