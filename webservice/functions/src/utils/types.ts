@@ -36,6 +36,6 @@ export type TRule = {
 };
 
 export type TParamEnv = {
-  appEnv: string
-  isDevEnv: boolean
-}
+  appEnv: string;
+  isDevEnv: boolean;
+};
