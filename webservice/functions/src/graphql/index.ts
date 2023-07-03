@@ -7,7 +7,7 @@ import DataLoader from "dataloader";
 import { typeDefs, resolvers } from "./scheme";
 import { Collection } from "../utils/constants";
 
-export default (firestore: Firestore) => {
+export default (firestore: Firestore, param: { isDevEnv: boolean }) => {
   const context: TGQLContext = {
     patientLoader: new DataLoader(async (keys) => {
       return keys.map(async (key) => {
@@ -28,7 +28,7 @@ export default (firestore: Firestore) => {
     resolvers: resolvers(firestore),
   });
 
-  const app = express();
+  const app = express(param.isDevEnv);
   server.start().then(() =>
     app.use(
       "/",

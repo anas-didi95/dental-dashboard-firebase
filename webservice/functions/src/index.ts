@@ -1,14 +1,16 @@
 import * as functions from "firebase-functions/v2"
 import firebase from "firebase-admin"
+import { defineString } from "firebase-functions/params"
 
 const firebaseApp = firebase.initializeApp()
+const isDevEnv = defineString("FUNCTION_APP_ENV").equals("dev").value()
 
 import helloWorldHandler from "./hello-world"
 import graphQLHandler from "./graphql"
 import patientHandler from "./patient"
 export const v1 = {
   helloWorld: functions.https.onRequest(helloWorldHandler()),
-  graphql: functions.https.onRequest(graphQLHandler(firebaseApp.firestore())),
+  graphql: functions.https.onRequest(graphQLHandler(firebaseApp.firestore(), { isDevEnv })),
   patients: functions.https.onRequest(patientHandler(firebase.firestore()))
 }
 

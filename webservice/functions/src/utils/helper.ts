@@ -6,7 +6,7 @@ import * as functions from "firebase-functions"
 import admin from "firebase-admin"
 import cookieParser from "cookie-parser"
 
-export const express = () => {
+export const express = (isDevEnv = false) => {
   const app = expressModule();
   // Express middleware that validates Firebase ID Tokens passed in the Authorization HTTP header.
   // The Firebase ID token needs to be passed as a Bearer token in the Authorization HTTP header like this:
@@ -56,7 +56,9 @@ export const express = () => {
   };
 
   app.use(cookieParser())
-  app.use(validateFirebaseIdToken)
+  if (!isDevEnv) {
+    app.use(validateFirebaseIdToken)
+  }
 
   return app;
 };
