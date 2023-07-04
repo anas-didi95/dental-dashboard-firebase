@@ -1,4 +1,5 @@
 import * as functions from "firebase-functions/v2"
+import * as functions1 from "firebase-functions"
 import firebase from "firebase-admin"
 import { defineString } from "firebase-functions/params"
 import { TParamEnv } from "./utils/types"
@@ -17,3 +18,6 @@ export const v1 = {
   graphql: functions.https.onRequest(graphQLHandler(firebaseApp.firestore(), paramEnv)),
   patients: functions.https.onRequest(patientHandler(firebase.firestore()))
 }
+
+import authTrigger from "./auth"
+export const auth = functions1.auth.user().onCreate(authTrigger(firebaseApp.firestore()))
