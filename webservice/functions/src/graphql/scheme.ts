@@ -1,8 +1,7 @@
 import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { GraphQLScalarType, Kind } from "graphql";
-import { TAppointment, TGQLContext, TParamEnv } from "../utils/types";
 import { Collection } from "../utils/constants";
-import { getServerHealth } from "../utils/helper";
+import { TAppointment, TGQLContext, TParamEnv } from "../utils/types";
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -19,8 +18,6 @@ const typeDefs = `#graphql
   }
 
   type ServerHealth {
-    deployDate: Date!
-    isOnline: Boolean!
     appEnv: String!
     isDevEnv: Boolean!
   }
@@ -76,8 +73,7 @@ const resolvers = (firestore: Firestore, paramEnv: TParamEnv) => ({
   }),
   Query: {
     serverHealth: async () => {
-      const result = await getServerHealth(firestore).get();
-      return { ...result.data(), ...paramEnv };
+      return { ...paramEnv };
     },
     patients: async () => {
       const resultList = await firestore.collection(Collection.Patient).get();
@@ -97,4 +93,5 @@ const resolvers = (firestore: Firestore, paramEnv: TParamEnv) => ({
   },
 });
 
-export { typeDefs, resolvers };
+export { resolvers, typeDefs };
+

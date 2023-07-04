@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions/v2"
 import firebase from "firebase-admin"
 import { defineString } from "firebase-functions/params"
-import { TParamEnv, TServerHealth } from "./utils/types"
+import { TParamEnv } from "./utils/types"
 
 const firebaseApp = firebase.initializeApp()
 const paramEnv: TParamEnv = {
@@ -17,14 +17,3 @@ export const v1 = {
   graphql: functions.https.onRequest(graphQLHandler(firebaseApp.firestore(), paramEnv)),
   patients: functions.https.onRequest(patientHandler(firebase.firestore()))
 }
-
-import { getServerHealth } from "./utils/helper"
-const healthData: TServerHealth = {
-  deployDate: firebase.firestore.Timestamp.now(),
-  isOnline: true
-}
-const doc = getServerHealth(firebaseApp.firestore())
-doc.get().then(record => {
-  if (record.exists) return doc.update(healthData)
-  return doc.create(healthData)
-}).then(result => console.log("[init] Functions deployed.", { ...healthData, ...result }))
