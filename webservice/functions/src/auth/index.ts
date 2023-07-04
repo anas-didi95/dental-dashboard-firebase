@@ -8,8 +8,8 @@ export default (firestore: Firestore) => {
       fullName: user.displayName ?? "",
       lastModifiedBy: "SYSTEM",
       lastModifiedDate: Timestamp.now(),
-      version: 0
-    }
-    await firestore.collection("users").doc(user.uid).create(data)
-  }
-}
+      version: 0,
+    };
+    await firestore.collection("users").doc(user.uid).create(data);
+  };
+};

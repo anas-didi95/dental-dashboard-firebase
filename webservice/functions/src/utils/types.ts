@@ -16,8 +16,8 @@ export type TAppointment = {
 };
 
 export type TUser = {
-  fullName: string
-} & TRecord
+  fullName: string;
+} & TRecord;
 
 export type TGQLContext = {
   patientLoader: DataLoader<

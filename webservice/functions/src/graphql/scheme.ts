@@ -94,4 +94,3 @@ const resolvers = (firestore: Firestore, paramEnv: TParamEnv) => ({
 });
 
 export { resolvers, typeDefs };
-
