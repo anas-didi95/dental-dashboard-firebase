@@ -13,5 +13,5 @@ export default (firestore: Firestore) => {
     await firestore.collection("users").doc(user.uid).create(data);
   };
 
-  return { onCreate }
+  return { onCreate };
 };
