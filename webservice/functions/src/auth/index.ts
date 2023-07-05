@@ -3,7 +3,7 @@ import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { TUser } from "../utils/types";
 
 export default (firestore: Firestore) => {
-  return async (user: UserRecord) => {
+  const onCreate = async (user: UserRecord) => {
     const data: TUser = {
       fullName: user.displayName ?? "",
       lastModifiedBy: "SYSTEM",
@@ -12,4 +12,6 @@ export default (firestore: Firestore) => {
     };
     await firestore.collection("users").doc(user.uid).create(data);
   };
+
+  return { onCreate }
 };

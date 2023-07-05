@@ -16,8 +16,10 @@ import patientHandler from "./patient"
 export const v1 = {
   helloWorld: functions.https.onRequest(helloWorldHandler()),
   graphql: functions.https.onRequest(graphQLHandler(firebaseApp.firestore(), paramEnv)),
-  patients: functions.https.onRequest(patientHandler(firebase.firestore()))
+  patients: functions.https.onRequest(patientHandler(firebaseApp.firestore()))
 }
 
 import authTrigger from "./auth"
-export const auth = functions1.auth.user().onCreate(authTrigger(firebaseApp.firestore()))
+export const authUser = {
+  onCreate: functions1.auth.user().onCreate(authTrigger(firebaseApp.firestore()).onCreate)
+}
