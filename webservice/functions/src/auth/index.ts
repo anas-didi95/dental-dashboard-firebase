@@ -4,10 +4,10 @@ import { TParamEnv, TUser } from "../utils/types";
 
 export default (firestore: Firestore, auth: Auth, paramEnv: TParamEnv) => {
   const onCreate = async (user: UserRecord) => {
-    const [userId, domain] = user.email?.split("@") ?? []
+    const [userId, domain] = user.email?.split("@") ?? [];
     if (domain !== paramEnv.emailDomain) {
-      await auth.deleteUser(user.uid)
-      throw new Error("Incorrect domain!")
+      await auth.deleteUser(user.uid);
+      throw new Error("Incorrect domain!");
     }
     const data: TUser = {
       userId,
