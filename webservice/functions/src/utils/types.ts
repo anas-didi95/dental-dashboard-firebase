@@ -16,6 +16,7 @@ export type TAppointment = {
 };
 
 export type TUser = {
+  userId: string
   fullName: string;
 } & TRecord;
 

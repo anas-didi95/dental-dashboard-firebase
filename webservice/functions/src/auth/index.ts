@@ -4,7 +4,9 @@ import { TUser } from "../utils/types";
 
 export default (firestore: Firestore) => {
   const onCreate = async (user: UserRecord) => {
+    const [userId, domain] = user.email?.split("@") ?? []
     const data: TUser = {
+      userId,
       fullName: user.displayName ?? "",
       lastModifiedBy: "SYSTEM",
       lastModifiedDate: Timestamp.now(),
