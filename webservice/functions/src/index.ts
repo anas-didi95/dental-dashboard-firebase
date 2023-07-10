@@ -7,7 +7,8 @@ import { TParamEnv } from "./utils/types"
 const firebaseApp = firebase.initializeApp()
 const paramEnv: TParamEnv = {
   appEnv: defineString("FUNCTION_APP_ENV").value(),
-  isDevEnv: defineString("FUNCTION_APP_ENV").equals("dev").value()
+  isDevEnv: defineString("FUNCTION_APP_ENV").equals("dev").value(),
+  emailDomain: defineString("FUNCTION_APP_EMAIL_DOMAIN").value()
 }
 
 import helloWorldHandler from "./hello-world"
@@ -21,5 +22,5 @@ export const v1 = {
 
 import authTrigger from "./auth"
 export const authUser = {
-  onCreate: functions1.auth.user().onCreate(authTrigger(firebaseApp.firestore(), firebaseApp.auth()).onCreate)
+  onCreate: functions1.auth.user().onCreate(authTrigger(firebaseApp.firestore(), firebaseApp.auth(), paramEnv).onCreate)
 }

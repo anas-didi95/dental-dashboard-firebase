@@ -43,4 +43,5 @@ export type TRule = {
 export type TParamEnv = {
   appEnv: string;
   isDevEnv: boolean;
+  emailDomain: string;
 };
