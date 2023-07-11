@@ -15,24 +15,24 @@ export default (firestore: Firestore, auth: Auth, paramEnv: TParamEnv) => {
       lastModifiedBy: "SYSTEM",
       lastModifiedDate: Timestamp.now(),
       version: 0,
-      isDeleted: user.disabled
+      isDeleted: user.disabled,
     };
     await firestore.collection("users").doc(user.uid).create(data);
   };
 
   const onDelete = async (user: UserRecord) => {
-    const record = firestore.collection("users").doc(user.uid)
-    const result = (await record.get()).data()
+    const record = firestore.collection("users").doc(user.uid);
+    const result = (await record.get()).data();
     if (!result) {
-      throw new Error(`Record[${user.uid}] not found!`)
+      throw new Error(`Record[${user.uid}] not found!`);
     }
     await record.update({
       lastModifiedBy: "SYSTEM",
       lastModifiedDate: Timestamp.now(),
       version: result.version + 1,
-      isDeleted: true
-    })
-  }
+      isDeleted: true,
+    });
+  };
 
   return { onCreate, onDelete };
 };
