@@ -22,5 +22,6 @@ export const v1 = {
 
 import authTrigger from "./auth"
 export const authUser = {
-  onCreate: functions1.auth.user().onCreate(authTrigger(firebaseApp.firestore(), firebaseApp.auth(), paramEnv).onCreate)
+  onCreate: functions1.auth.user().onCreate(authTrigger(firebaseApp.firestore(), firebaseApp.auth(), paramEnv).onCreate),
+  onDelete: functions1.auth.user().onDelete(authTrigger(firebaseApp.firestore(), firebaseApp.auth(), paramEnv).onDelete),
 }
