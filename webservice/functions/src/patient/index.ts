@@ -13,6 +13,7 @@ export default (firestore: Firestore) => {
       version: 0,
       lastModifiedDate: Timestamp.now(),
       lastModifiedBy: req.app.locals.user.user_id,
+      isDeleted: false
     };
     validate(body, res);
 

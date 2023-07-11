@@ -15,6 +15,7 @@ export default (firestore: Firestore, auth: Auth, paramEnv: TParamEnv) => {
       lastModifiedBy: "SYSTEM",
       lastModifiedDate: Timestamp.now(),
       version: 0,
+      isDeleted: user.disabled
     };
     await firestore.collection("users").doc(user.uid).create(data);
   };

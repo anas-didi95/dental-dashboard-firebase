@@ -2,6 +2,7 @@ import DataLoader from "dataloader";
 import { DocumentData, Timestamp } from "firebase-admin/firestore";
 
 type TRecord = {
+  isDeleted: boolean;
   version: number;
   lastModifiedDate: Timestamp;
   lastModifiedBy: string;
