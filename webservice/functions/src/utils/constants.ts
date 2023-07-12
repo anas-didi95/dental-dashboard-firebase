@@ -2,7 +2,7 @@ export const Collection = {
   Patient: "patients",
   Appointment: "appointments",
   Server: "server",
-  User: "users"
+  User: "users",
 };
 
 export const ErrorCode = {

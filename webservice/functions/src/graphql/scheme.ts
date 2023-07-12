@@ -98,9 +98,9 @@ const resolvers = (firestore: Firestore, paramEnv: TParamEnv) => ({
       return resultList.docs.map((o) => o.data());
     },
     users: async () => {
-      const resultList = await firestore.collection(Collection.User).get()
-      return resultList.docs.map(o => o.data())
-    }
+      const resultList = await firestore.collection(Collection.User).get();
+      return resultList.docs.map((o) => o.data());
+    },
   },
   Appointment: {
     patient: async (parent: TAppointment, _: unknown, context: TGQLContext) => {
