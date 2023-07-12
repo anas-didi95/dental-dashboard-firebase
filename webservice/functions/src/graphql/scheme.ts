@@ -15,6 +15,7 @@ const typeDefs = `#graphql
     version: Int!
     lastModifiedDate: Date!
     lastModifiedBy: String!
+    isDeleted: Boolean!
   }
 
   type ServerHealth {
@@ -27,11 +28,21 @@ const typeDefs = `#graphql
     version: Int!
     lastModifiedDate: Date!
     lastModifiedBy: String!
+    isDeleted: Boolean!
   }
 
   type Appointment {
     patient: Patient!
     date: Date!
+  }
+
+  type User implements Record {
+    userId: String!
+    fullName: String!
+    version: Int!
+    lastModifiedDate: Date!
+    lastModifiedBy: String!
+    isDeleted: Boolean!
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -40,6 +51,7 @@ const typeDefs = `#graphql
     serverHealth: ServerHealth
     patients: [Patient]!
     appointments: [Appointment]!
+    users: [User]!
   }
 `;
 
@@ -85,6 +97,10 @@ const resolvers = (firestore: Firestore, paramEnv: TParamEnv) => ({
         .get();
       return resultList.docs.map((o) => o.data());
     },
+    users: async () => {
+      const resultList = await firestore.collection(Collection.User).get()
+      return resultList.docs.map(o => o.data())
+    }
   },
   Appointment: {
     patient: async (parent: TAppointment, _: unknown, context: TGQLContext) => {
