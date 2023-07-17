@@ -1,7 +1,7 @@
 import DataLoader from "dataloader";
 import { DocumentData, Timestamp } from "firebase-admin/firestore";
 
-type TRecord = {
+export type TRecord = {
   isDeleted: boolean;
   version: number;
   lastModifiedDate: Timestamp;
@@ -27,6 +27,7 @@ export type TGQLContext = {
     Promise<DocumentData | null | undefined>,
     string
   >;
+  userLoader: DataLoader<string, Promise<DocumentData | null | undefined>, string>
 };
 
 export type TServerHealth = {

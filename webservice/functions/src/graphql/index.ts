@@ -19,6 +19,13 @@ export default (firestore: Firestore, paramEnv: TParamEnv) => {
         return result.data();
       });
     }),
+    userLoader: new DataLoader(async (keys) => {
+      return keys.map(async (key) => {
+        const result = await firestore.collection(Collection.User).doc(key).get()
+        if (!result.exists) return null
+        return result.data()
+      })
+    })
   };
 
   // The ApolloServer constructor requires two parameters: your schema

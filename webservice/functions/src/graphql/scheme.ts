@@ -1,7 +1,7 @@
 import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { GraphQLScalarType, Kind } from "graphql";
 import { Collection } from "../utils/constants";
-import { TAppointment, TGQLContext, TParamEnv } from "../utils/types";
+import { TAppointment, TGQLContext, TParamEnv, TRecord } from "../utils/types";
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -14,7 +14,7 @@ const typeDefs = `#graphql
   interface Record {
     version: Int!
     lastModifiedDate: Date!
-    lastModifiedBy: String!
+    lastModifiedBy: User!
     isDeleted: Boolean!
   }
 
@@ -27,7 +27,7 @@ const typeDefs = `#graphql
     fullName: String!
     version: Int!
     lastModifiedDate: Date!
-    lastModifiedBy: String!
+    lastModifiedBy: User!
     isDeleted: Boolean!
   }
 
@@ -38,10 +38,10 @@ const typeDefs = `#graphql
 
   type User implements Record {
     userId: String!
-    fullName: String!
+    fullName: String
     version: Int!
     lastModifiedDate: Date!
-    lastModifiedBy: String!
+    lastModifiedBy: User!
     isDeleted: Boolean!
   }
 
@@ -107,6 +107,12 @@ const resolvers = (firestore: Firestore, paramEnv: TParamEnv) => ({
       return context.patientLoader.load(parent.patientId);
     },
   },
+  Patient: { lastModifiedBy },
+  User: { lastModifiedBy }
 });
 
 export { resolvers, typeDefs };
+
+const lastModifiedBy = async (parent: TRecord, _: unknown, context: TGQLContext) => {
+  return context.userLoader.load(parent.lastModifiedBy)
+}

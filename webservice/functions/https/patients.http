@@ -6,7 +6,7 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.$.idToken}}
 
 {
-  "fullName": "John Doe"
+  "fullName": "Meshach Matheus"
 }
 
 ###
@@ -17,7 +17,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "email": "test@email.com",
-  "password": "password",
+  "email": "anas@anasdidi.dev",
+  "password": "p@ssw0rd",
   "returnSecureToken": true
 }
