@@ -108,11 +108,15 @@ const resolvers = (firestore: Firestore, paramEnv: TParamEnv) => ({
     },
   },
   Patient: { lastModifiedBy },
-  User: { lastModifiedBy }
+  User: { lastModifiedBy },
 });
 
 export { resolvers, typeDefs };
 
-const lastModifiedBy = async (parent: TRecord, _: unknown, context: TGQLContext) => {
-  return context.userLoader.load(parent.lastModifiedBy)
-}
+const lastModifiedBy = async (
+  parent: TRecord,
+  _: unknown,
+  context: TGQLContext
+) => {
+  return context.userLoader.load(parent.lastModifiedBy);
+};
