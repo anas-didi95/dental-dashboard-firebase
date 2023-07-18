@@ -12,7 +12,8 @@ export default (firestore: Firestore) => {
       ...req.body,
       version: 0,
       lastModifiedDate: Timestamp.now(),
-      lastModifiedBy: "SYSTEM",
+      lastModifiedBy: req.app.locals.user.user_id,
+      isDeleted: false,
     };
     validate(body, res);
 

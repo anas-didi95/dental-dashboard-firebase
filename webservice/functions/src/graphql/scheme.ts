@@ -1,8 +1,7 @@
 import { Firestore, Timestamp } from "firebase-admin/firestore";
 import { GraphQLScalarType, Kind } from "graphql";
-import { TAppointment, TGQLContext } from "../utils/types";
 import { Collection } from "../utils/constants";
-import { getServerHealth } from "../utils/helper";
+import { TAppointment, TGQLContext, TParamEnv, TRecord } from "../utils/types";
 
 // A schema is a collection of type definitions (hence "typeDefs")
 // that together define the "shape" of queries that are executed against
@@ -15,24 +14,35 @@ const typeDefs = `#graphql
   interface Record {
     version: Int!
     lastModifiedDate: Date!
-    lastModifiedBy: String!
+    lastModifiedBy: User!
+    isDeleted: Boolean!
   }
 
   type ServerHealth {
-    deployDate: Date!
-    isOnline: Boolean!
+    appEnv: String!
+    isDevEnv: Boolean!
   }
 
   type Patient implements Record {
     fullName: String!
     version: Int!
     lastModifiedDate: Date!
-    lastModifiedBy: String!
+    lastModifiedBy: User!
+    isDeleted: Boolean!
   }
 
   type Appointment {
     patient: Patient!
     date: Date!
+  }
+
+  type User implements Record {
+    userId: String!
+    fullName: String
+    version: Int!
+    lastModifiedDate: Date!
+    lastModifiedBy: User!
+    isDeleted: Boolean!
   }
 
   # The "Query" type is special: it lists all of the available queries that
@@ -41,11 +51,12 @@ const typeDefs = `#graphql
     serverHealth: ServerHealth
     patients: [Patient]!
     appointments: [Appointment]!
+    users: [User]!
   }
 `;
 
 // Resolvers define how to fetch the types defined in your schema.
-const resolvers = (firestore: Firestore) => ({
+const resolvers = (firestore: Firestore, paramEnv: TParamEnv) => ({
   Date: new GraphQLScalarType({
     name: "Date",
     description: "Date custom scalar type",
@@ -74,8 +85,7 @@ const resolvers = (firestore: Firestore) => ({
   }),
   Query: {
     serverHealth: async () => {
-      const result = await getServerHealth(firestore).get();
-      return result.data();
+      return { ...paramEnv };
     },
     patients: async () => {
       const resultList = await firestore.collection(Collection.Patient).get();
@@ -87,12 +97,26 @@ const resolvers = (firestore: Firestore) => ({
         .get();
       return resultList.docs.map((o) => o.data());
     },
+    users: async () => {
+      const resultList = await firestore.collection(Collection.User).get();
+      return resultList.docs.map((o) => o.data());
+    },
   },
   Appointment: {
     patient: async (parent: TAppointment, _: unknown, context: TGQLContext) => {
       return context.patientLoader.load(parent.patientId);
     },
   },
+  Patient: { lastModifiedBy },
+  User: { lastModifiedBy },
 });
 
-export { typeDefs, resolvers };
+export { resolvers, typeDefs };
+
+const lastModifiedBy = async (
+  parent: TRecord,
+  _: unknown,
+  context: TGQLContext
+) => {
+  return context.userLoader.load(parent.lastModifiedBy);
+};

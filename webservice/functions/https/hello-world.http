@@ -1,6 +1,22 @@
-GET http://127.0.0.1:5001/dental-dashboard/us-central1/helloWorld
+GET http://127.0.0.1:5001/dental-dashboard/us-central1/v1-helloWorld
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.idToken}}
 
 {
     "name": "sample",
     "time": "Wed, 21 Oct 2015 18:27:50 GMT"
+}
+
+###
+
+# @name login
+POST http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]
+Accept: application/json
+Content-Type: application/json
+
+{
+  "email": "test@email.com",
+  "password": "password",
+  "returnSecureToken": true
 }
